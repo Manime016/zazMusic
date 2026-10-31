@@ -1,13 +1,22 @@
-node_modules/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
 
-dist/
-build/
-coverage/
+# Temporary uploads
+temp/
+uploads/
 
-*.log
+# IDE
+.vscode/
+.idea/
 
+# OS
 .DS_Store
 Thumbs.db
