@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <title>ZazMusic — find your next favorite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home" aria-label="ZazMusic home"><span class="brand-mark">♫</span><span>Zaz<span class="brand-accent">Music</span></span></a>
+      <div class="side-label">YOUR SPACE</div>
+      <nav class="side-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-page="discover"><span>⌕</span> Discover</button>
+        <button class="nav-item" data-page="liked"><span>♡</span> Liked songs</button>
+        <button class="nav-item" data-page="playlists"><span>▤</span> Playlists</button>
+      </nav>
+      <div class="side-label playlist-label">YOUR PLAYLISTS <button class="tiny-add" id="quickCreate" title="Create playlist">＋</button></div>
+      <div id="sidebarPlaylists" class="sidebar-playlists"><p class="muted small">Sign in to see your playlists.</p></div>
+      <div class="sidebar-bottom"><div class="api-status"><i></i><span id="apiStatus">Checking your music space</span></div><button class="text-button" id="settingsBtn">⚙ &nbsp; API settings</button></div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar"><button class="mobile-brand" id="mobileMenu">☰</button><div class="breadcrumbs">Your music <span>/</span> <b id="crumb">Discover</b></div>
+        <div class="top-actions"><button class="admin-shortcut" id="adminShortcut"><span class="shield">✦</span> Admin portal</button><div class="account-wrap" id="accountWrap"><button class="account-button" id="accountButton"><span class="avatar" id="avatar">G</span><span id="accountName">Guest</span><span class="chevron">⌄</span></button><div class="account-menu hidden" id="accountMenu"><button id="userSignIn">Sign in / Create account</button><button id="adminSignIn">Admin sign in</button><button id="signOut" class="hidden">Sign out</button></div></div></div>
+      </header>
+
+      <section class="content" id="content">
+        <div class="welcome-row"><div><p class="eyebrow"><span class="sparkle">✦</span> YOUR DAILY SOUNDTRACK</p><h1>Find your <em>next favorite.</em></h1><p class="subhead">A little discovery, a lot of good music.</p></div><div class="hero-art" aria-hidden="true"><div class="art-disc disc-one"></div><div class="art-disc disc-two"></div><div class="art-note">♫</div><span class="art-spark s1">✦</span><span class="art-spark s2">✧</span></div></div>
+        <div class="search-row"><label class="search-box"><span class="search-icon">⌕</span><input id="searchInput" type="search" placeholder="Search songs, artists, albums..." autocomplete="off"><kbd>↵</kbd></label><button class="search-button" id="searchButton">Explore music <span>→</span></button></div>
+        <div id="notice" class="notice hidden" role="status"></div>
+        <section class="section-block"><div class="section-heading"><div><p class="eyebrow">THE GOOD STUFF</p><h2 id="resultsTitle">Made for your mood</h2></div><span class="result-count" id="resultCount"></span></div><div id="songGrid" class="song-grid"><div class="empty-state"><div class="empty-icon">♫</div><h3>Ready when you are</h3><p>Search for a song, artist or album to get the music started.</p></div></div></section>
+        <footer class="footer-note">Made for the moments that need a soundtrack <span>♥</span></footer>
+      </section>
+    </main>
+
+    <aside class="player-bar" id="playerBar"><div class="now-playing"><div class="mini-cover" id="playerCover">♫</div><div class="track-copy"><b id="playerTitle">Pick a song to begin</b><span id="playerArtist">Your next favorite is out there</span></div><button class="like-now" id="playerLike" title="Like song">♡</button></div><div class="player-controls"><div class="control-buttons"><button id="prevBtn" title="Previous">◀|</button><button class="play-button" id="playBtn" title="Play">▶</button><button id="nextBtn" title="Next">|▶</button></div><div class="progress-line"><span id="elapsed">0:00</span><input id="progress" type="range" min="0" max="100" value="0"><span id="duration">0:00</span></div></div><div class="player-extra"><span class="volume-icon">◖))</span><input id="volume" type="range" min="0" max="1" step="0.01" value="0.8"><button id="queueBtn" title="Queue">☷</button></div><audio id="audio"></audio></aside>
+  </div>
+
+  <dialog id="authDialog" class="modal"><form method="dialog" class="modal-close-form"><button class="close-button" aria-label="Close">×</button></form><div class="modal-kicker" id="authKicker">WELCOME TO YOUR MUSIC</div><h2 id="authTitle">Come on in.</h2><p class="modal-copy" id="authCopy">Sign in to save the songs you love.</p><div class="role-switch"><button class="role-tab active" data-role="user">♫ &nbsp; Listener</button><button class="role-tab" data-role="admin">✦ &nbsp; Admin</button></div><div class="auth-mode"><button class="mode-link active" data-mode="login">Sign in</button><span>·</span><button class="mode-link" data-mode="register">Create account</button></div><form id="authForm"><label class="field" id="usernameField"><span>Your name</span><input name="username" minlength="3" maxlength="50" placeholder="e.g. Alex Rivera"></label><label class="field"><span>Email address</span><input name="email" type="email" required placeholder="you@example.com"></label><label class="field"><span>Password</span><input name="password" type="password" required minlength="8" placeholder="At least 8 characters"></label><button class="primary-button full-width" id="authSubmit">Sign in as listener <span>→</span></button></form><p class="auth-footnote" id="authFootnote">Your account, your soundtrack. ♡</p></dialog>
+
+  <dialog id="adminDialog" class="modal admin-modal"><form method="dialog" class="modal-close-form"><button class="close-button" aria-label="Close">×</button></form><div class="modal-kicker admin-kicker">✦ &nbsp; MUSIC LIBRARY</div><h2>Studio desk</h2><p class="modal-copy">Manage the songs in your ZazMusic library.</p><div class="admin-welcome" id="adminWelcome"></div><form id="uploadForm" class="upload-form"><label class="field"><span>Song title</span><input name="title" required maxlength="200" placeholder="Give it a name"></label><div class="field-pair"><label class="field"><span>Artist</span><input name="artist" required maxlength="200" placeholder="Artist name"></label><label class="field"><span>Album</span><input name="album" required maxlength="200" placeholder="Album title"></label></div><label class="field"><span>Duration in seconds</span><input name="duration" type="number" min="1" required placeholder="e.g. 214"></label><label class="file-drop" for="songFile"><span class="file-icon">↑</span><b id="fileLabel">Choose an audio file</b><small>MP3, WAV or other supported audio · max size depends on your storage</small><input id="songFile" name="file" type="file" accept="audio/*" required></label><button class="primary-button full-width" type="submit">Upload to library <span>↑</span></button></form><div id="adminSongList" class="admin-song-list"></div></dialog>
+
+  <dialog id="playlistDialog" class="modal"><form method="dialog" class="modal-close-form"><button class="close-button" aria-label="Close">×</button></form><div class="modal-kicker">MAKE IT YOURS</div><h2 id="playlistDialogTitle">A new collection.</h2><form id="playlistForm"><label class="field"><span>Playlist name</span><input name="name" required maxlength="100" placeholder="Late night drives"></label><label class="field"><span>Description <small>(optional)</small></span><textarea name="description" maxlength="500" rows="3" placeholder="What does this playlist feel like?"></textarea></label><button class="primary-button full-width">Create playlist <span>→</span></button></form></dialog>
+
+  <dialog id="settingsDialog" class="modal"><form method="dialog" class="modal-close-form"><button class="close-button" aria-label="Close">×</button></form><div class="modal-kicker">CONNECTION</div><h2>Where's your API?</h2><p class="modal-copy">Point ZazMusic to your running FastAPI server.</p><form id="settingsForm"><label class="field"><span>Backend address</span><input name="api" type="url" required placeholder="http://127.0.0.1:8000"></label><button class="primary-button full-width">Save connection <span>→</span></button></form><p class="auth-footnote">The API should allow requests from this page's origin.</p></dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
