@@ -1,3 +1,4 @@
+
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -6,76 +7,68 @@ from server.schema.admin import AdminCreate, AdminLogin
 from server.Utility.security import (
     hash_password,
     verify_password,
-    create_access_token
+    create_access_token,
 )
 
-def register_admin(
-    credentials: AdminCreate,
-    db: Session
-):
-    # 1. Check whether email already exists
-    existing_admin = db.query(Admin).filter(
-        Admin.email == credentials.email
-    ).first()
+
+def register_admin(credentials: AdminCreate, db: Session):
+    existing_admin = (
+        db.query(Admin)
+        .filter(Admin.email == str(credentials.email))
+        .first()
+    )
 
     if existing_admin:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Email already registered"
+            detail="Admin email already registered",
         )
 
-    # 2. Hash password
-    hashed_password = hash_password(
-        credentials.password
-    )
-
-    # 3. Create new admin
     new_admin = Admin(
         username=credentials.username,
         email=str(credentials.email),
-        password_hash=hashed_password
+        password_hash=hash_password(credentials.password),
     )
 
-    # 4. Save admin to database
     try:
         db.add(new_admin)
         db.commit()
         db.refresh(new_admin)
-
     except Exception:
         db.rollback()
         raise
 
     return new_admin
 
-def login_admin(
-    credentials: AdminLogin,
-    db: Session
-):
-    # 1. Find admin using email
-    admin = db.query(Admin).filter(
-        Admin.email == credentials.email
-    ).first()
 
-    if not admin:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password"
-        )
+def login_admin(credentials: AdminLogin, db: Session):
+    admin = (
+        db.query(Admin)
+        .filter(Admin.email == str(credentials.email))
+        .first()
+    )
 
-    # 2. Verify password
-    if not verify_password(
+    if not admin or not verify_password(
         credentials.password,
-        admin.password_hash
+        admin.password_hash,
     ):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid email or password"
+            detail="Invalid email or password",
         )
 
-    # 3. Create access token
     access_token = create_access_token(
-        data={"sub": str(admin.id)}
+        user_id=admin.id,
+        role="admin",
     )
 
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "message": "Admin login successful",
+        "access_token": access_token,
+        "token_type": "bearer",
+        "admin": {
+            "id": admin.id,
+            "username": admin.username,
+            "email": admin.email,
+        },
+    }
