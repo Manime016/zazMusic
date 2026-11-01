@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI
 
-from server.routes import endpoints, events, songs, users, admin
+from server.routes import endpoints, events, songs, users, admin, user_features
 
 app = FastAPI(
     title="ZazMusic API",
@@ -23,3 +23,4 @@ app.include_router(events.router)
 app.include_router(songs.router)
 app.include_router(users.router)
 app.include_router(admin.router)
+app.include_router(user_features.router)
